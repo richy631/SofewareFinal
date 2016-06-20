@@ -1,8 +1,10 @@
 package com.example.sofewarefinal;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,9 +14,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private TextView text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +35,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -70,6 +84,15 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
+        else if (id == R.id.action_hello){
+            //Parser parser = new Parser();
+            //parser.getWiki();
+            text = (TextView) findViewById(R.id.my_text);
+            text.setText("87878878787878788787");
+            //Toast toast = Toast.makeText(getBaseContext(), parser.getNewsHeadlines().toString(), Toast.LENGTH_SHORT).show();
+            //Toast toast = Toast.makeText(getApplicationContext(),"BBBBBBBBBBBBBBB", Toast.LENGTH_SHORT);
+            //toast.show();
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -82,6 +105,8 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
+            //ParsePage parse = new ParsePage();
+            //parse.execute("http://en.wikipedia.org/");
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -98,4 +123,35 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+    public class ParsePage extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params){
+            Document doc;
+            try{
+                doc = Jsoup.connect(params[0]).get();
+                Elements newsHeadlines = doc.select("#mp-itn b a");
+                String logs = newsHeadlines.toString();
+                Log.d("See Wiki", logs);
+
+            }
+            catch (IOException e){
+                e.printStackTrace();
+            }
+
+            return "Executed";
+        }
+        protected void onPostExecute(String[] result){
+            if(result != null){
+
+                text = (TextView) findViewById(R.id.my_text);
+                text.setText("QWERTYUIOP{SDFGHJKL:ZXCVBNM<");
+                //text.setText(result.toString());
+            }
+        }
+        protected void onPreExecute(String res){
+
+        }
+    }
+
+
 }
