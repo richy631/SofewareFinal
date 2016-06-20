@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -105,8 +106,8 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
-            //ParsePage parse = new ParsePage();
-            //parse.execute("http://en.wikipedia.org/");
+            ParsePage parse = new ParsePage();
+            parse.execute("http://netdb-softwarestudio.appspot.com/");
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -129,27 +130,24 @@ public class MainActivity extends AppCompatActivity
             Document doc;
             try{
                 doc = Jsoup.connect(params[0]).get();
-                Elements newsHeadlines = doc.select("#mp-itn b a");
-                String logs = newsHeadlines.toString();
-                Log.d("See Wiki", logs);
-
+                Elements elements = doc.select("p");
+                String logs = elements.toString();
+                Log.d("See Facebook", logs);
+                return logs;
             }
             catch (IOException e){
                 e.printStackTrace();
             }
 
-            return "Executed";
+            return null;
         }
-        protected void onPostExecute(String[] result){
-            if(result != null){
 
+        protected void onPostExecute(String result){
+            //if(result != null){
+                Log.i("WOWOWOWOWOW", result);
                 text = (TextView) findViewById(R.id.my_text);
-                text.setText("QWERTYUIOP{SDFGHJKL:ZXCVBNM<");
-                //text.setText(result.toString());
-            }
-        }
-        protected void onPreExecute(String res){
-
+                text.setText(result);
+            //}
         }
     }
 
