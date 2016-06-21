@@ -3,6 +3,7 @@ package com.example.sofewarefinal;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,11 +17,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import org.jsoup.Jsoup;
+import org.jsoup.helper.StringUtil;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
@@ -40,10 +43,12 @@ public class StockNameActivity extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+
         setHasOptionsMenu(true);
+
     }
-    /*
-    @Override
+
+    /*@Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         inflater.inflate(R.menu.main, menu);
     }*/
@@ -70,13 +75,29 @@ public class StockNameActivity extends Fragment {
 
         ListView listView = (ListView) rootView.findViewById(R.id.my_list_view);
         listView.setAdapter(myArrayAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                String content = myArrayAdapter.getItem(position);
+                Intent intent = new Intent(getActivity(), DetailActivity.class)
+                        .putExtra(Intent.EXTRA_TEXT, content);
+                startActivity(intent);
+            }
+        });
 
         return rootView;
     }
 
     private void update(){
         ParsePage parse = new ParsePage();
-        parse.execute("https://tw.stock.yahoo.com/h/getclass.php");
+        parse.execute("https://tw.stock.yahoo.com/s/list.php?c=%B3n%C5%E9%B7%7E&rr=0.96335300%201466436405");
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        update();
     }
 
     public class ParsePage extends AsyncTask<String, Void, String[]> {
@@ -85,7 +106,7 @@ public class StockNameActivity extends Fragment {
             Document doc;
             try{
                 doc = Jsoup.connect(params[0]).get();
-                Elements title = doc.select("table > tbody > tr > td > table > tbody > tr > td > table, [cols=2]");
+                Elements title = doc.select("table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr[height=30] > td > a");
                 //String logs = elements.toString();
                 String logs = title.text();
                 String[] stocks = logs.split(" ");
@@ -104,8 +125,10 @@ public class StockNameActivity extends Fragment {
             if(result != null){
                 myArrayAdapter.clear();
                 for (String tmp : result) {
-                    myArrayAdapter.add(tmp);
+                    if(!StringUtil.isNumeric(tmp) && !tmp.equals("零股交易"))
+                        myArrayAdapter.add(tmp);
                     Log.i("WOWOWOWOWOW", tmp);
+
                 }
                 //text = (TextView) findViewById(R.id.my_text);
                 //text.setText(result.toString());
