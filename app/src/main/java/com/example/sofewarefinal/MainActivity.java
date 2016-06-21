@@ -1,10 +1,14 @@
 package com.example.sofewarefinal;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.text.method.ScrollingMovementMethod;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,10 +18,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -28,12 +36,12 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private TextView text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -55,6 +63,11 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        if (savedInstanceState == null){
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.drawer_layout, new StockNameActivity())
+                    .commit();
+        }
     }
 
     @Override
@@ -85,15 +98,6 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
-        else if (id == R.id.action_hello){
-            //Parser parser = new Parser();
-            //parser.getWiki();
-            text = (TextView) findViewById(R.id.my_text);
-            text.setText("87878878787878788787");
-            //Toast toast = Toast.makeText(getBaseContext(), parser.getNewsHeadlines().toString(), Toast.LENGTH_SHORT).show();
-            //Toast toast = Toast.makeText(getApplicationContext(),"BBBBBBBBBBBBBBB", Toast.LENGTH_SHORT);
-            //toast.show();
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -106,8 +110,7 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
-            ParsePage parse = new ParsePage();
-            parse.execute("http://netdb-softwarestudio.appspot.com/");
+
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -123,32 +126,6 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-    public class ParsePage extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... params){
-            Document doc;
-            try{
-                doc = Jsoup.connect(params[0]).get();
-                Elements elements = doc.select("p");
-                String logs = elements.toString();
-                Log.d("See Facebook", logs);
-                return logs;
-            }
-            catch (IOException e){
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        protected void onPostExecute(String result){
-            //if(result != null){
-                Log.i("WOWOWOWOWOW", result);
-                text = (TextView) findViewById(R.id.my_text);
-                text.setText(result);
-            //}
-        }
     }
 
 
