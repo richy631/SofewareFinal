@@ -124,9 +124,13 @@ public class StockNameActivity extends Fragment {
         protected void onPostExecute(String[] result){
             if(result != null){
                 myArrayAdapter.clear();
+                int cnt = 0;
                 for (String tmp : result) {
-                    if(!StringUtil.isNumeric(tmp) && !tmp.equals("零股交易"))
+
+                    if(!StringUtil.isNumeric(tmp) && !tmp.equals("零股交易")){
+                        //cnt = cnt + 1;
                         myArrayAdapter.add(tmp);
+                    }
                     Log.i("WOWOWOWOWOW", tmp);
 
                 }
