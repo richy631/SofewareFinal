@@ -45,7 +45,7 @@ public class DetailActivity extends ActionBarActivity{
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.detail_menu, menu);
         return true;
     }
 
@@ -95,6 +95,10 @@ public class DetailActivity extends ActionBarActivity{
 
         public class ParsePage extends AsyncTask<String, Void, String[]> {
 
+            private String[] nameStr= {
+                "名稱", "時間",  "成交", "買進", "賣出", "漲跌", "張數", "昨收", "開盤", "最高", "最低"
+            };
+
 
             @Override
             protected String[] doInBackground(String... params){
@@ -120,6 +124,7 @@ public class DetailActivity extends ActionBarActivity{
                 if(result != null){
                     myArrayAdapter.clear();
                     int flag = 0;
+                    int cnt = 0;
                     for (String tmp : result) {
                         //if(!StringUtil.isNumeric(tmp) && !tmp.equals("零股交易"))
                         if (tmp.equals(myContentStr))
@@ -128,7 +133,8 @@ public class DetailActivity extends ActionBarActivity{
                             break;
 
                         if (flag == 1) {
-                            myArrayAdapter.add(tmp);
+                            myArrayAdapter.add(nameStr[cnt] +":\t\t"+ tmp);
+                            cnt ++;
                             Log.i("WOWOWOWOWOW", tmp);
                         }
                     }
