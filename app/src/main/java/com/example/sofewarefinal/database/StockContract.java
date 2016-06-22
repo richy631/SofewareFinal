@@ -15,6 +15,7 @@ public class StockContract {
 
     public static final String PATH_STOCK = "stock";
     public static final String PATH_PERSON = "person";
+    public static final String PATH_OWN = "own";
 
     public static final class StockEntry implements BaseColumns {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_STOCK).build();
@@ -47,15 +48,27 @@ public class StockContract {
         public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PERSON;
 
         public static final String TABLE_NAME = "person";
-        public static final String COLUMN_STOCK_NAME = "stock_name";
-        public static final String COLUMN_OWN = "own";
+        //public static final String COLUMN_STOCK_NAME = "stock_name";
+        public static final String COLUMN_OWN_MONEY = "own_money";//own howmany money
 
         public static Uri buildLocationUri(long id){
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
 
     }
+    public static final class OwnEntry implements BaseColumns {
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_OWN).build();
+        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_URI + "/" + PATH_OWN;
+        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_OWN;
 
+        public static final String TABLE_NAME = "own";
 
+        public static final String COLUMN_STOCK_ID = "stock_id";
+        public static final String COLUMN_NUMBER_YOU_OWN = "number_you_own";
+
+        public static Uri buildLocationUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+    }
 
 }
